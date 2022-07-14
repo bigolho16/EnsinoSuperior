@@ -1,0 +1,114 @@
+CREATE TABLE Cliente (
+	idCliente int PRIMARY KEY,
+    nome varchar(100),
+    endereco varchar(250),
+    idade int,
+    cpf varchar(50),
+    telefone varchar(50),
+    email varchar(250),
+    login varchar(250),
+    senha varchar(250)
+);
+
+CREATE TABLE Veiculo (
+	fk_UltimaManutencao_idManutencao int,
+    fk_UltimaLavagem_idLavagem int,
+    idVeiculo int PRIMARY KEY,
+    ano date,
+    modelo varchar(250),
+    placa varchar(100),
+    cor varchar(100),
+    diaria double,
+    velocidade varchar(100),
+    passageiros int,
+    descricao varchar(250)
+);
+
+CREATE TABLE Funcionario (
+	fk_Cargo_idCargo int,
+    idFuncionario int PRIMARY KEY,
+    nome varchar(100),
+    email varchar(250),
+    telefone varchar(50),
+    endereco varchar(250),
+    idade int,
+    cpf varchar(50),
+    login varchar(250),
+    senha varchar(250)
+);
+
+CREATE TABLE Cargo (
+	fk_Setor_idSetor int,
+    idCargo int PRIMARY KEY,
+    descricao_cargo varchar(250),
+    salario double
+);
+
+CREATE TABLE Setor (
+	idSetor int PRIMARY KEY,
+    descricaoSetor varchar(250)
+);
+
+CREATE TABLE Manutencao (
+    fk_Veiculo_idVeiculo int,
+    fk_idFuncionario int,
+	idManutencao int PRIMARY KEY,
+    listaManutencao text,
+    dataManutencao date
+);
+
+CREATE TABLE Lavagem (
+    fk_Veiculo_idVeiculo int,
+    fk_idFuncionario int,
+	idLavagem int PRIMARY KEY,
+    listaLavagem text,
+    dataLavagem date
+);
+
+CREATE TABLE Locacao (
+	fk_Cliente_idCliente int,
+    fk_Veiculo_idVeiculo int,
+    fk_Funcionario_idFuncionario int,
+    idALocacao int PRIMARY KEY,
+    valorAlocado double,
+    dataAlacacao date,
+    dataDevolucao date
+);
+
+CREATE TABLE SolicitaPecas (
+	fk_Funcionario_idFuncionario int,
+    fk_Fornecedor_idFornecedor int,
+    idSolicitaPecas int PRIMARY KEY,
+    tipoMercadoria text,
+    dataPedido date,
+    prazoEntrega date
+);
+
+CREATE TABLE Fornecedor (
+	idFornecedor int PRIMARY KEY,
+    endereco varchar(250),
+    telefone varchar(100),
+    email varchar(250),
+    cnpj varchar(250),
+    descricaoFornecedor varchar(250)
+);
+
+ALTER TABLE Veiculo ADD CONSTRAINT FK_Veiculo_1 FOREIGN KEY (fk_Manutencao_idManutencao) REFERENCES Manutencao(idManutencao);
+ALTER TABLE Veiculo ADD CONSTRAINT FK_Veiculo_2 FOREIGN KEY (fk_Lavagem_idLavagem) REFERENCES Lavagem(idLavagem);
+
+ALTER TABLE Funcionario ADD CONSTRAINT FK_Funcionario_1 FOREIGN KEY (fk_Cargo_idCargo) REFERENCES Cargo(idCargo);
+
+ALTER TABLE Cargo ADD CONSTRAINT FK_Cargo_1 FOREIGN KEY (fk_Setor_idSetor) REFERENCES Setor(idSetor);
+
+ALTER TABLE Locacao ADD CONSTRAINT FK_Locacao_1 FOREIGN KEY (fk_Cliente_idCliente) REFERENCES Cliente(idCliente);
+ALTER TABLE Locacao ADD CONSTRAINT FK_Locacao_2 FOREIGN KEY (fk_Veiculo_idVeiculo) REFERENCES Veiculo(idVeiculo);
+ALTER TABLE Locacao ADD CONSTRAINT FK_Locacao_3 FOREIGN KEY (fk_Funcionario_idFuncionario) REFERENCES Funcionario(idFuncionario);
+
+ALTER TABLE Manutencao ADD CONSTRAINT FK_Manutencao_1 FOREIGN KEY (fk_idFuncionario) REFERENCES Funcionario(idFuncionario);
+ALTER TABLE Manutencao ADD CONSTRAINT FK_Manutencao_2 FOREIGN KEY (fk_Veiculo_idVeiculo) REFERENCES Veiculo(idVeiculo);
+
+ALTER TABLE Lavagem ADD CONSTRAINT FK_Lavagem_1 FOREIGN KEY (fk_idFuncionario) REFERENCES Funcionario(idFuncionario);
+ALTER TABLE Lavagem ADD CONSTRAINT FK_Lavagem_2 FOREIGN KEY (fk_Veiculo_idVeiculo) REFERENCES Veiculo(idVeiculo);
+
+ALTER TABLE SolicitaPecas ADD CONSTRAINT FK_SolicitaPecas_1 FOREIGN KEY (fk_Funcionario_idFuncionario) REFERENCES Funcionario(idFuncionario);
+ALTER TABLE SolicitaPecas ADD CONSTRAINT FK_SolicitaPecas_2 FOREIGN KEY (fk_Fornecedor_idFornecedor) REFERENCES Fornecedor(idFornecedor);
